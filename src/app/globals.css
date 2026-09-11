@@ -1,0 +1,197 @@
+@import "tailwindcss";
+
+:root {
+  /* Design tokens */
+  --canvas: #0A0A0B;
+  --surface-1: #111114;
+  --surface-2: #16161A;
+  --surface-3: #1C1C20;
+  --surface-4: #232328;
+  --tint-1: rgba(255,255,255,0.02);
+  --tint-2: rgba(255,255,255,0.04);
+  --tint-3: rgba(255,255,255,0.06);
+  --tint-4: rgba(255,255,255,0.08);
+  --fg-0: #FAFAFA;
+  --fg-1: #E4E4E7;
+  --fg-2: #A1A1AA;
+  --fg-3: #71717A;
+  --fg-4: #52525B;
+  --fg-inv: #0A0A0B;
+  --border-1: rgba(255,255,255,0.06);
+  --border-2: rgba(255,255,255,0.08);
+  --border-3: rgba(255,255,255,0.14);
+  --border-4: rgba(255,255,255,0.22);
+  --status-live: #00E5A0;
+  --status-success: #86EFAC;
+  --status-warn: #FCD34D;
+  --status-danger: #FCA5A5;
+  --shadow-glass: inset 0 1px 0 rgba(255,255,255,0.08), inset 0 0 0 1px rgba(255,255,255,0.04), 0 20px 60px -20px rgba(0,0,0,0.7);
+  --ease-smooth: cubic-bezier(0.32, 0.72, 0, 1);
+  --dur-micro: 150ms;
+  --dur-state: 300ms;
+
+  /* shadcn/ui variables — dark theme */
+  --background: #0A0A0B;
+  --foreground: #FAFAFA;
+  --card: #111114;
+  --card-foreground: #FAFAFA;
+  --popover: #16161A;
+  --popover-foreground: #FAFAFA;
+  --primary: #FAFAFA;
+  --primary-foreground: #0A0A0B;
+  --secondary: #16161A;
+  --secondary-foreground: #E4E4E7;
+  --muted: rgba(255,255,255,0.04);
+  --muted-foreground: #71717A;
+  --accent: rgba(255,255,255,0.06);
+  --accent-foreground: #FAFAFA;
+  --destructive: #EF4444;
+  --border: rgba(255,255,255,0.08);
+  --input: rgba(255,255,255,0.08);
+  --ring: rgba(255,255,255,0.22);
+  --radius: 0.625rem;
+
+  /* Chart colors */
+  --chart-1: #00E5A0;
+  --chart-2: #86EFAC;
+  --chart-3: #FCD34D;
+  --chart-4: #93C5FD;
+  --chart-5: #FCA5A5;
+
+  /* Sidebar */
+  --sidebar: #0A0A0B;
+  --sidebar-foreground: #E4E4E7;
+  --sidebar-primary: #FAFAFA;
+  --sidebar-primary-foreground: #0A0A0B;
+  --sidebar-accent: rgba(255,255,255,0.06);
+  --sidebar-accent-foreground: #FAFAFA;
+  --sidebar-border: rgba(255,255,255,0.06);
+  --sidebar-ring: rgba(255,255,255,0.22);
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Tailwind color utilities → shadcn variables */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  *, ::before, ::after {
+    border-color: var(--border);
+  }
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--fg-1);
+  -webkit-font-smoothing: antialiased;
+  font-family: var(--font-geist-sans);
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0,229,160,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 90% 80%, rgba(147,197,253,0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Legacy button utilities (used by landing page) */
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; height:40px; padding:0 20px; border-radius:10px; font-size:14px; font-weight:500; cursor:pointer; border:1px solid transparent; transition:opacity 150ms,transform 150ms,background 150ms,border-color 150ms; white-space:nowrap; text-decoration:none; }
+.btn-primary { background:var(--primary); color:var(--primary-foreground); }
+.btn-primary:hover { opacity:0.9; }
+.btn-primary:active { opacity:0.85; transform:scale(0.98); }
+.btn-secondary { background:transparent; color:var(--fg-0); border-color:var(--border-3); }
+.btn-secondary:hover { background:var(--tint-2); border-color:var(--border-4); }
+.btn-ghost { background:transparent; color:var(--fg-1); }
+.btn-ghost:hover { background:var(--tint-2); color:var(--fg-0); }
+.btn-sm { height:32px; padding:0 12px; font-size:13px; border-radius:6px; }
+.btn-lg { height:48px; padding:0 24px; font-size:16px; }
+
+/* Pill badge */
+.pill { display:inline-flex; align-items:center; gap:8px; height:24px; padding:0 8px; border-radius:999px; background:var(--tint-2); border:1px solid var(--border-2); color:var(--fg-2); font-size:12px; font-family:var(--font-geist-mono); letter-spacing:0.02em; }
+.pill .dot { width:6px; height:6px; border-radius:999px; background:var(--fg-3); flex-shrink:0; }
+.pill.live { background:rgba(0,229,160,0.08); border-color:rgba(0,229,160,0.25); color:#00E5A0; }
+.pill.live .dot { background:#00E5A0; animation:pulse 1.8s ease infinite; }
+
+@keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(0,229,160,0.5)} 70%{box-shadow:0 0 0 8px rgba(0,229,160,0)} 100%{box-shadow:0 0 0 0 rgba(0,229,160,0)} }
+
+/* Waveform bar animations — 3 phases for organic feel */
+@keyframes barAnimA { 0%,100%{height:4px} 45%{height:28px} }
+@keyframes barAnimB { 0%,100%{height:8px} 55%{height:36px} }
+@keyframes barAnimC { 0%,100%{height:3px} 38%{height:18px} }
+
+/* Dashboard card entrance */
+@keyframes cardEnter { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+.metric-card { animation:cardEnter 0.4s var(--ease-smooth) both; }
+
+/* OTP input caret */
+@keyframes caret-blink { 0%,70%,100%{opacity:1} 20%,50%{opacity:0} }
+.animate-caret-blink { animation:caret-blink 1.2s ease-in-out infinite; }
+
+/* Live table row */
+.row-live { background:rgba(0,229,160,0.03); }
+.row-live:hover { background:rgba(0,229,160,0.06) !important; }
+
+/* Sidebar active nav item — teal accent */
+[data-sidebar="menu-button"][data-active="true"] {
+  background: rgba(0,229,160,0.08) !important;
+  color: #00E5A0 !important;
+  box-shadow: inset 2px 0 0 #00E5A0;
+}
+[data-sidebar="menu-button"][data-active="true"] svg {
+  color: #00E5A0;
+}
+
+.reveal { opacity:0; transform:translateY(4px); transition:opacity var(--dur-page,600ms) var(--ease-smooth), transform var(--dur-page,600ms) var(--ease-smooth); }
+.reveal.in { opacity:1; transform:translateY(0); }
+
+@media (max-width: 768px) {
+  .hero-grid { grid-template-columns: 1fr !important; }
+  .features-grid { grid-template-columns: 1fr !important; }
+  .feature-large { grid-column: span 1 !important; }
+  .pricing-grid { grid-template-columns: 1fr !important; }
+  .testimonials-grid { grid-template-columns: 1fr !important; }
+  .demo-grid { grid-template-columns: 1fr !important; }
+  .footer-grid { grid-template-columns: 1fr 1fr !important; }
+  .nav-links { display: none !important; }
+}
