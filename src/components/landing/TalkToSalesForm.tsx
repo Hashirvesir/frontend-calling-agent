@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import {
   Select,
   SelectContent,
@@ -13,18 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  User,
-  Mail,
-  Phone,
-  Building2,
-  CheckCircle2,
-  Loader2,
-  Sparkles,
-  ArrowRight,
-  TrendingUp,
-  Headphones,
-} from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { submitSalesLead } from '@/lib/api';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -72,7 +60,7 @@ export default function TalkToSalesForm({ onSuccess, className }: Props) {
       return;
     }
     if (!phone.trim()) {
-      toast.error('Please enter your phone or WhatsApp number');
+      toast.error('Please enter your phone number');
       return;
     }
     if (!useCase) {
@@ -98,13 +86,13 @@ export default function TalkToSalesForm({ onSuccess, className }: Props) {
 
       if (res.ok) {
         setSubmitted(true);
-        toast.success('Inquiry submitted! Our team will contact you shortly.');
+        toast.success('Inquiry submitted successfully.');
         if (onSuccess) onSuccess();
       } else {
-        toast.error(res.message || 'Failed to submit form. Please try again.');
+        toast.error(res.message || 'Failed to submit. Please try again.');
       }
     } catch {
-      toast.error('Network error. Please check your connection.');
+      toast.error('Network error. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -112,18 +100,12 @@ export default function TalkToSalesForm({ onSuccess, className }: Props) {
 
   if (submitted) {
     return (
-      <div className={cn('flex flex-col items-center justify-center text-center p-6 sm:p-8 rounded-2xl border border-[var(--border-2)] bg-[var(--surface-1)] shadow-[var(--shadow-glass)]', className)}>
-        <div className="size-14 rounded-full bg-chart-1/10 border border-chart-1/30 flex items-center justify-center text-chart-1 mb-4 animate-in zoom-in-50 duration-300">
-          <CheckCircle2 className="size-7" />
-        </div>
-        <Badge variant="outline" className="font-mono text-xs mb-3 border-chart-1/30 text-chart-1">
-          LEAD RECEIVED · HIGH PRIORITY
-        </Badge>
-        <h3 className="text-xl sm:text-2xl font-semibold text-foreground mb-2">
+      <div className={cn('flex flex-col items-center justify-center text-center p-8 rounded-xl border border-white/10 bg-black text-white', className)}>
+        <h3 className="text-xl font-semibold mb-2">
           Thank you, {name}!
         </h3>
-        <p className="text-sm text-muted-foreground max-w-md leading-relaxed mb-6">
-          We received your enterprise inquiry for <span className="text-foreground font-medium">{callVolume}</span>. Our voice solution specialist will reach out to you at <span className="text-foreground font-medium font-mono">{phone}</span> or <span className="text-foreground font-medium">{email}</span> within 2 business hours.
+        <p className="text-sm text-neutral-400 max-w-sm mb-6 leading-relaxed">
+          Your inquiry has been received. Our team will review your details and get in touch with you.
         </p>
         <Button
           variant="outline"
@@ -137,7 +119,7 @@ export default function TalkToSalesForm({ onSuccess, className }: Props) {
             setCallVolume('');
             setNotes('');
           }}
-          className="text-xs font-mono"
+          className="text-xs bg-transparent border-white/20 text-white hover:bg-white/10"
         >
           Submit another inquiry
         </Button>
@@ -146,149 +128,126 @@ export default function TalkToSalesForm({ onSuccess, className }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className={cn('flex flex-col gap-4 text-left', className)}>
-      {/* Contact Details */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+    <form onSubmit={handleSubmit} className={cn('flex flex-col gap-4 text-left text-white', className)}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <Label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-            <User className="size-3.5 text-chart-1" /> Full Name <span className="text-destructive">*</span>
+          <Label className="text-xs text-neutral-300">
+            Full Name <span className="text-white">*</span>
           </Label>
           <Input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Tariq Mehmood"
-            className="h-9 bg-[var(--surface-2)] border-[var(--border-2)] text-sm placeholder:text-muted-foreground/50 focus-visible:border-chart-1"
+            placeholder="Name"
+            className="h-10 bg-black border-white/15 text-white placeholder:text-neutral-500 focus-visible:border-white focus-visible:ring-0"
             required
           />
         </div>
 
         <div className="space-y-1.5">
-          <Label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-            <Mail className="size-3.5 text-chart-1" /> Work Email <span className="text-destructive">*</span>
+          <Label className="text-xs text-neutral-300">
+            Work Email <span className="text-white">*</span>
           </Label>
           <Input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="tariq@company.com"
-            className="h-9 bg-[var(--surface-2)] border-[var(--border-2)] text-sm placeholder:text-muted-foreground/50 focus-visible:border-chart-1"
+            placeholder="email@company.com"
+            className="h-10 bg-black border-white/15 text-white placeholder:text-neutral-500 focus-visible:border-white focus-visible:ring-0"
             required
           />
         </div>
 
         <div className="space-y-1.5">
-          <Label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-            <Phone className="size-3.5 text-chart-1" /> Phone / WhatsApp <span className="text-destructive">*</span>
+          <Label className="text-xs text-neutral-300">
+            Phone / WhatsApp <span className="text-white">*</span>
           </Label>
           <Input
             type="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="+92 300 1234567"
-            className="h-9 font-mono bg-[var(--surface-2)] border-[var(--border-2)] text-sm placeholder:text-muted-foreground/50 focus-visible:border-chart-1"
+            className="h-10 bg-black border-white/15 text-white placeholder:text-neutral-500 focus-visible:border-white focus-visible:ring-0 font-mono text-sm"
             required
           />
         </div>
 
         <div className="space-y-1.5">
-          <Label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-            <Building2 className="size-3.5 text-muted-foreground" /> Company / Brand Name
+          <Label className="text-xs text-neutral-300">
+            Company Name
           </Label>
           <Input
             value={company}
             onChange={(e) => setCompany(e.target.value)}
-            placeholder="e.g. Khaadi / Daraz Seller"
-            className="h-9 bg-[var(--surface-2)] border-[var(--border-2)] text-sm placeholder:text-muted-foreground/50 focus-visible:border-chart-1"
+            placeholder="Company"
+            className="h-10 bg-black border-white/15 text-white placeholder:text-neutral-500 focus-visible:border-white focus-visible:ring-0"
           />
         </div>
       </div>
 
-      {/* Qualification Fields Box */}
-      <div className="p-3.5 rounded-xl border border-chart-1/25 bg-chart-1/[0.03] space-y-3.5">
-        <div className="flex items-center justify-between">
-          <span className="text-[11px] font-mono tracking-wider uppercase text-chart-1 flex items-center gap-1.5 font-medium">
-            <Sparkles className="size-3" /> Qualification Details
-          </span>
-          <span className="text-[10px] text-muted-foreground font-mono">Helps us prioritize your lead</span>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-1.5">
+          <Label className="text-xs text-neutral-300">
+            Primary Use-Case <span className="text-white">*</span>
+          </Label>
+          <Select value={useCase} onValueChange={(val) => setUseCase(val ?? '')}>
+            <SelectTrigger className="h-10 bg-black border-white/15 text-white text-xs text-left focus-visible:border-white focus-visible:ring-0">
+              <SelectValue placeholder="Select use-case" />
+            </SelectTrigger>
+            <SelectContent side="bottom" align="start" className="bg-black border-white/15 text-white">
+              {USE_CASES.map((uc) => (
+                <SelectItem key={uc} value={uc} className="text-xs text-neutral-200 focus:bg-white focus:text-black cursor-pointer">
+                  {uc}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-          {/* Primary Use-Case Dropdown */}
-          <div className="space-y-1.5">
-            <Label className="text-xs font-medium text-foreground flex items-center gap-1.5">
-              <Headphones className="size-3.5 text-chart-1" /> Primary Use-Case <span className="text-destructive">*</span>
-            </Label>
-            <Select value={useCase} onValueChange={(val) => setUseCase(val ?? '')}>
-              <SelectTrigger className="h-9 bg-[var(--surface-2)] border-[var(--border-2)] text-xs text-left focus-visible:border-chart-1">
-                <SelectValue placeholder="Select primary use-case..." />
-              </SelectTrigger>
-              <SelectContent side="bottom" align="start" className="bg-[var(--surface-1)] border-[var(--border-2)]">
-                {USE_CASES.map((uc) => (
-                  <SelectItem key={uc} value={uc} className="text-xs focus:bg-chart-1/10 focus:text-chart-1 cursor-pointer">
-                    {uc}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Expected Monthly Call Volume Dropdown */}
-          <div className="space-y-1.5">
-            <Label className="text-xs font-medium text-foreground flex items-center gap-1.5">
-              <TrendingUp className="size-3.5 text-chart-1" /> Monthly Call Volume <span className="text-destructive">*</span>
-            </Label>
-            <Select value={callVolume} onValueChange={(val) => setCallVolume(val ?? '')}>
-              <SelectTrigger className="h-9 bg-[var(--surface-2)] border-[var(--border-2)] text-xs text-left focus-visible:border-chart-1">
-                <SelectValue placeholder="Select expected volume..." />
-              </SelectTrigger>
-              <SelectContent side="bottom" align="start" className="bg-[var(--surface-1)] border-[var(--border-2)]">
-                {CALL_VOLUMES.map((cv) => (
-                  <SelectItem key={cv} value={cv} className="text-xs focus:bg-chart-1/10 focus:text-chart-1 cursor-pointer">
-                    {cv}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+        <div className="space-y-1.5">
+          <Label className="text-xs text-neutral-300">
+            Monthly Call Volume <span className="text-white">*</span>
+          </Label>
+          <Select value={callVolume} onValueChange={(val) => setCallVolume(val ?? '')}>
+            <SelectTrigger className="h-10 bg-black border-white/15 text-white text-xs text-left focus-visible:border-white focus-visible:ring-0">
+              <SelectValue placeholder="Select call volume" />
+            </SelectTrigger>
+            <SelectContent side="bottom" align="start" className="bg-black border-white/15 text-white">
+              {CALL_VOLUMES.map((cv) => (
+                <SelectItem key={cv} value={cv} className="text-xs text-neutral-200 focus:bg-white focus:text-black cursor-pointer">
+                  {cv}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
-      {/* Additional Notes / Requirements */}
       <div className="space-y-1.5">
-        <Label className="text-xs font-medium text-muted-foreground flex items-center justify-between">
-          <span>Project Notes & Custom Requirements</span>
-          <span className="text-[10px] text-muted-foreground/60 font-mono">Optional</span>
+        <Label className="text-xs text-neutral-300">
+          Notes
         </Label>
         <Textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          placeholder="Tell us about your current stack, CRM, integration requirements, or languages needed..."
-          className="min-h-[70px] bg-[var(--surface-2)] border-[var(--border-2)] text-xs placeholder:text-muted-foreground/50 resize-none focus-visible:border-chart-1"
+          placeholder="Tell us about your requirements..."
+          className="min-h-[80px] bg-black border-white/15 text-white text-xs placeholder:text-neutral-500 resize-none focus-visible:border-white focus-visible:ring-0"
         />
       </div>
 
-      {/* Submit Button */}
       <Button
         type="submit"
         disabled={loading}
-        className="w-full h-10 mt-1 bg-foreground text-background hover:bg-foreground/90 font-medium text-xs sm:text-sm shadow-md transition-all gap-2 cursor-pointer"
+        className="w-full h-10 mt-2 bg-white text-black hover:bg-neutral-200 font-medium text-sm transition-all cursor-pointer"
       >
         {loading ? (
-          <>
+          <div className="flex items-center gap-2">
             <Loader2 className="size-4 animate-spin" />
-            <span>Submitting your inquiry...</span>
-          </>
+            <span>Submitting...</span>
+          </div>
         ) : (
-          <>
-            <span>Submit Sales Inquiry</span>
-            <ArrowRight className="size-4" />
-          </>
+          <span>Submit</span>
         )}
       </Button>
-
-      <p className="text-[11px] text-center text-muted-foreground/70 font-mono">
-        Guaranteed response within 2 hours · Direct engineer contact
-      </p>
     </form>
   );
 }
