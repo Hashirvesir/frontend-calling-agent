@@ -8,7 +8,7 @@ export default function TalkToSalesSection() {
       id="talk-to-sales"
       style={{
         padding: '80px 24px',
-        maxWidth: '460px',
+        maxWidth: '760px',
         margin: '0 auto',
       }}
     >
@@ -19,7 +19,7 @@ export default function TalkToSalesSection() {
           WebkitBackdropFilter: 'blur(24px) saturate(160%)',
           border: '1px solid var(--border-2)',
           borderRadius: '20px',
-          padding: 'clamp(28px, 5vw, 40px) clamp(20px, 4vw, 36px)',
+          padding: 'clamp(32px, 5vw, 48px) clamp(24px, 5vw, 44px)',
           boxShadow: 'var(--shadow-glass)',
         }}
       >

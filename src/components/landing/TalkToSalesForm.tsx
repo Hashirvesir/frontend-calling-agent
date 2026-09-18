@@ -149,38 +149,38 @@ export default function TalkToSalesForm({ onSuccess, showLogo = true }: Props) {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          <Label htmlFor="sales-name" style={{ color: 'var(--fg-2)', fontSize: '13px' }}>
-            Full name <span style={{ color: 'var(--fg-0)' }}>*</span>
-          </Label>
-          <Input
-            id="sales-name"
-            value={name}
-            onChange={e => setName(e.target.value)}
-            placeholder="Jane Doe"
-            style={{ height: '40px', fontSize: '14px' }}
-            required
-          />
-        </div>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <Label htmlFor="sales-name" style={{ color: 'var(--fg-2)', fontSize: '13px' }}>
+              Full name <span style={{ color: 'var(--fg-0)' }}>*</span>
+            </Label>
+            <Input
+              id="sales-name"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              placeholder="Jane Doe"
+              style={{ height: '42px', fontSize: '14px' }}
+              required
+            />
+          </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          <Label htmlFor="sales-email" style={{ color: 'var(--fg-2)', fontSize: '13px' }}>
-            Work email <span style={{ color: 'var(--fg-0)' }}>*</span>
-          </Label>
-          <Input
-            id="sales-email"
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            placeholder="you@company.com"
-            autoComplete="email"
-            style={{ height: '40px', fontSize: '14px' }}
-            required
-          />
-        </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <Label htmlFor="sales-email" style={{ color: 'var(--fg-2)', fontSize: '13px' }}>
+              Work email <span style={{ color: 'var(--fg-0)' }}>*</span>
+            </Label>
+            <Input
+              id="sales-email"
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="you@company.com"
+              autoComplete="email"
+              style={{ height: '42px', fontSize: '14px' }}
+              required
+            />
+          </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             <Label htmlFor="sales-phone" style={{ color: 'var(--fg-2)', fontSize: '13px' }}>
               Phone / WhatsApp <span style={{ color: 'var(--fg-0)' }}>*</span>
@@ -191,7 +191,7 @@ export default function TalkToSalesForm({ onSuccess, showLogo = true }: Props) {
               value={phone}
               onChange={e => setPhone(e.target.value)}
               placeholder="+92 300 1234567"
-              style={{ height: '40px', fontSize: '14px', fontFamily: 'var(--font-geist-mono)' }}
+              style={{ height: '42px', fontSize: '14px', fontFamily: 'var(--font-geist-mono)' }}
               required
             />
           </div>
@@ -205,58 +205,58 @@ export default function TalkToSalesForm({ onSuccess, showLogo = true }: Props) {
               value={company}
               onChange={e => setCompany(e.target.value)}
               placeholder="Acme Inc."
-              style={{ height: '40px', fontSize: '14px' }}
+              style={{ height: '42px', fontSize: '14px' }}
             />
           </div>
-        </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          <Label style={{ color: 'var(--fg-2)', fontSize: '13px' }}>
-            Primary Use-Case <span style={{ color: 'var(--fg-0)' }}>*</span>
-          </Label>
-          <Select value={useCase} onValueChange={(val) => setUseCase(val ?? '')}>
-            <SelectTrigger style={{ height: '40px', fontSize: '14px' }}>
-              <SelectValue placeholder="Select use-case" />
-            </SelectTrigger>
-            <SelectContent side="bottom" align="start">
-              {USE_CASES.map((uc) => (
-                <SelectItem key={uc} value={uc} style={{ fontSize: '13px', cursor: 'pointer' }}>
-                  {uc}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <Label style={{ color: 'var(--fg-2)', fontSize: '13px' }}>
+              Primary Use-Case <span style={{ color: 'var(--fg-0)' }}>*</span>
+            </Label>
+            <Select value={useCase} onValueChange={(val) => setUseCase(val ?? '')}>
+              <SelectTrigger style={{ height: '42px', fontSize: '14px' }}>
+                <SelectValue placeholder="Select use-case" />
+              </SelectTrigger>
+              <SelectContent side="bottom" align="start">
+                {USE_CASES.map((uc) => (
+                  <SelectItem key={uc} value={uc} style={{ fontSize: '13px', cursor: 'pointer' }}>
+                    {uc}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          <Label style={{ color: 'var(--fg-2)', fontSize: '13px' }}>
-            Expected Monthly Call Volume <span style={{ color: 'var(--fg-0)' }}>*</span>
-          </Label>
-          <Select value={callVolume} onValueChange={(val) => setCallVolume(val ?? '')}>
-            <SelectTrigger style={{ height: '40px', fontSize: '14px' }}>
-              <SelectValue placeholder="Select call volume" />
-            </SelectTrigger>
-            <SelectContent side="bottom" align="start">
-              {CALL_VOLUMES.map((cv) => (
-                <SelectItem key={cv} value={cv} style={{ fontSize: '13px', cursor: 'pointer' }}>
-                  {cv}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <Label style={{ color: 'var(--fg-2)', fontSize: '13px' }}>
+              Expected Monthly Call Volume <span style={{ color: 'var(--fg-0)' }}>*</span>
+            </Label>
+            <Select value={callVolume} onValueChange={(val) => setCallVolume(val ?? '')}>
+              <SelectTrigger style={{ height: '42px', fontSize: '14px' }}>
+                <SelectValue placeholder="Select call volume" />
+              </SelectTrigger>
+              <SelectContent side="bottom" align="start">
+                {CALL_VOLUMES.map((cv) => (
+                  <SelectItem key={cv} value={cv} style={{ fontSize: '13px', cursor: 'pointer' }}>
+                    {cv}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          <Label htmlFor="sales-notes" style={{ color: 'var(--fg-2)', fontSize: '13px' }}>
-            Notes (optional)
-          </Label>
-          <Textarea
-            id="sales-notes"
-            value={notes}
-            onChange={e => setNotes(e.target.value)}
-            placeholder="Tell us about your requirements..."
-            style={{ minHeight: '72px', fontSize: '13px', resize: 'none' }}
-          />
+          <div className="sm:col-span-2" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <Label htmlFor="sales-notes" style={{ color: 'var(--fg-2)', fontSize: '13px' }}>
+              Notes (optional)
+            </Label>
+            <Textarea
+              id="sales-notes"
+              value={notes}
+              onChange={e => setNotes(e.target.value)}
+              placeholder="Tell us about your requirements..."
+              style={{ minHeight: '80px', fontSize: '14px', resize: 'none' }}
+            />
+          </div>
         </div>
 
         <button
@@ -265,9 +265,9 @@ export default function TalkToSalesForm({ onSuccess, showLogo = true }: Props) {
           disabled={loading}
           style={{
             width: '100%',
-            height: '40px',
-            marginTop: '4px',
-            fontSize: '14px',
+            height: '44px',
+            fontSize: '15px',
+            fontWeight: 500,
             borderRadius: '10px',
             opacity: loading ? 0.7 : 1,
             cursor: 'pointer',
