@@ -7,9 +7,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ArrowLeft, PhoneIncoming, PhoneOutgoing, Phone, Download, Mic } from 'lucide-react';
-import { getCalls, getConversation, getCallMetrics, getRecordingUrl } from '@/lib/api';
+import { ArrowLeft, PhoneIncoming, PhoneOutgoing, Phone, Download, Mic, PhoneOff, Loader2 } from 'lucide-react';
+import { getCalls, getConversation, getCallMetrics, getRecordingUrl, endCallApi } from '@/lib/api';
 import type { CallRecord, TurnRecord, CallMetrics } from '@/lib/api';
+import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import CallMetricsTab from '@/components/dashboard/CallMetricsTab';
 
@@ -114,6 +115,7 @@ export default function CallDetailPage() {
   const [metrics, setMetrics] = useState<CallMetrics | null>(null);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<'overview' | 'metrics'>('overview');
+  const [isEnding, setIsEnding] = useState(false);
 
   useEffect(() => {
     Promise.all([getCalls(), getConversation(id), getCallMetrics(id)]).then(([calls, t, m]) => {
@@ -123,6 +125,24 @@ export default function CallDetailPage() {
       setLoading(false);
     });
   }, [id]);
+
+  const handleEndCall = async () => {
+    if (!call?.id || isEnding) return;
+    setIsEnding(true);
+    try {
+      const res = await endCallApi(call.id);
+      if (res.ok) {
+        toast.success('Live call ended');
+        setCall(prev => prev ? { ...prev, status: 'ended' } : null);
+      } else {
+        toast.error(res.message || 'Failed to end call');
+      }
+    } catch {
+      toast.error('Failed to end call');
+    } finally {
+      setIsEnding(false);
+    }
+  };
 
   const number = call
     ? (call.direction === 'inbound' ? call.from_number : call.to_number) ?? '—'
@@ -190,9 +210,25 @@ export default function CallDetailPage() {
         </div>
         <div className="flex items-center gap-2">
           {call.status === 'in_progress' && (
-            <span className="pill live" style={{ fontSize: '10px' }}>
-              <span className="dot" /> LIVE
-            </span>
+            <>
+              <span className="pill live" style={{ fontSize: '10px' }}>
+                <span className="dot" /> LIVE
+              </span>
+              <Button
+                variant="destructive"
+                size="sm"
+                disabled={isEnding}
+                onClick={handleEndCall}
+                className="h-7 text-xs px-2.5 gap-1.5 shadow-sm font-medium"
+              >
+                {isEnding ? (
+                  <Loader2 className="size-3.5 animate-spin" />
+                ) : (
+                  <PhoneOff className="size-3.5" />
+                )}
+                <span>End Call</span>
+              </Button>
+            </>
           )}
           <Badge variant="outline" className={cn('font-mono text-[11px]', statusCls(call.status))}>
             {statusLabel(call.status)}

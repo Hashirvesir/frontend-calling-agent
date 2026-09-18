@@ -26,9 +26,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-  Phone, PhoneIncoming, PhoneOutgoing, PhoneMissed, Clock, Trash2,
+  Phone, PhoneIncoming, PhoneOutgoing, PhoneMissed, PhoneOff, Clock, Trash2, Loader2,
 } from 'lucide-react';
-import { getCalls, getAgents, deleteCallApi } from '@/lib/api';
+import { getCalls, getAgents, deleteCallApi, endCallApi } from '@/lib/api';
 import type { CallRecord, AgentRecord } from '@/lib/api';
 import { toast } from 'sonner';
 import DialSheet from '@/components/dashboard/DialSheet';
@@ -87,6 +87,7 @@ export default function CallsPage() {
   const [filter, setFilter] = useState<Filter>('all');
   const [dialOpen, setDialOpen] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [endingCallId, setEndingCallId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
@@ -237,7 +238,7 @@ export default function CallsPage() {
                   <TableHead className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                     Started
                   </TableHead>
-                  <TableHead className="w-10 pr-4" />
+                  <TableHead className="w-24 pr-4 text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -290,25 +291,60 @@ export default function CallsPage() {
                         {formatDate(call.started_at)}
                       </TableCell>
                       <TableCell className="pr-4">
-                        <button
-                          disabled={deleting === call.id}
-                          onClick={async (e) => {
-                            e.stopPropagation();
-                            if (!confirm('Is call ka record delete karna chahte hain?')) return;
-                            setDeleting(call.id);
-                            const ok = await deleteCallApi(call.id);
-                            if (ok) {
-                              setCalls(prev => prev.filter(c => c.id !== call.id));
-                              toast.success('Call record deleted');
-                            } else {
-                              toast.error('Failed to delete call');
-                            }
-                            setDeleting(null);
-                          }}
-                          className="p-1 rounded text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors disabled:opacity-40"
-                        >
-                          <Trash2 className="size-3.5" />
-                        </button>
+                        <div className="flex items-center justify-end gap-1.5">
+                          {call.status === 'in_progress' && (
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              disabled={endingCallId === call.id}
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                setEndingCallId(call.id);
+                                try {
+                                  const res = await endCallApi(call.id);
+                                  if (res.ok) {
+                                    toast.success('Live call ended');
+                                    setCalls(prev => prev.map(c => c.id === call.id ? { ...c, status: 'ended' } : c));
+                                  } else {
+                                    toast.error(res.message || 'Failed to end call');
+                                  }
+                                } catch {
+                                  toast.error('Failed to end call');
+                                } finally {
+                                  setEndingCallId(null);
+                                }
+                              }}
+                              className="h-7 px-2 text-xs gap-1 shadow-sm font-medium"
+                              title="End live call"
+                            >
+                              {endingCallId === call.id ? (
+                                <Loader2 className="size-3 animate-spin" />
+                              ) : (
+                                <PhoneOff className="size-3" />
+                              )}
+                              <span>End</span>
+                            </Button>
+                          )}
+                          <button
+                            disabled={deleting === call.id}
+                            onClick={async (e) => {
+                              e.stopPropagation();
+                              if (!confirm('Is call ka record delete karna chahte hain?')) return;
+                              setDeleting(call.id);
+                              const ok = await deleteCallApi(call.id);
+                              if (ok) {
+                                setCalls(prev => prev.filter(c => c.id !== call.id));
+                                toast.success('Call record deleted');
+                              } else {
+                                toast.error('Failed to delete call');
+                              }
+                              setDeleting(null);
+                            }}
+                            className="p-1 rounded text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors disabled:opacity-40"
+                          >
+                            <Trash2 className="size-3.5" />
+                          </button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   );

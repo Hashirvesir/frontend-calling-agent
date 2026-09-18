@@ -3,7 +3,8 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { PhoneMissed } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { PhoneMissed, PhoneOff, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { CallRecord, TurnRecord } from '@/lib/api';
 
@@ -12,6 +13,8 @@ const WAVEFORM_BARS = 60;
 type Props = {
   call: CallRecord | null;
   turns: TurnRecord[];
+  onEndCall?: () => void;
+  isEnding?: boolean;
 };
 
 function formatDuration(secs: number | null): string {
@@ -28,7 +31,7 @@ function barAnimName(i: number): string {
   return 'barAnimC';
 }
 
-export default function LiveCallPanel({ call, turns }: Props) {
+export default function LiveCallPanel({ call, turns, onEndCall, isEnding }: Props) {
   const isLive = call?.status === 'in_progress';
   const displayNumber = call
     ? (call.direction === 'inbound' ? call.from_number : call.to_number) ?? '—'
@@ -49,11 +52,29 @@ export default function LiveCallPanel({ call, turns }: Props) {
               </span>
             )}
           </div>
-          {displayNumber && (
-            <Badge variant="outline" className="font-mono text-[11px] border-border text-foreground">
-              {displayNumber}
-            </Badge>
-          )}
+          <div className="flex items-center gap-2">
+            {displayNumber && (
+              <Badge variant="outline" className="font-mono text-[11px] border-border text-foreground">
+                {displayNumber}
+              </Badge>
+            )}
+            {isLive && onEndCall && (
+              <Button
+                variant="destructive"
+                size="sm"
+                className="h-7 text-xs px-2.5 gap-1.5 shadow-sm font-medium"
+                onClick={onEndCall}
+                disabled={isEnding}
+              >
+                {isEnding ? (
+                  <Loader2 className="size-3.5 animate-spin" />
+                ) : (
+                  <PhoneOff className="size-3.5" />
+                )}
+                <span>End Call</span>
+              </Button>
+            )}
+          </div>
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-4 pt-4">

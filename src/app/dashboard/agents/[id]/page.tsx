@@ -44,9 +44,12 @@ import {
   Bot,
   PhoneMissed,
   FlaskConical,
+  PhoneOff,
+  Loader2,
 } from "lucide-react";
-import { getAgentById, getCalls } from "@/lib/api";
+import { getAgentById, getCalls, endCallApi } from "@/lib/api";
 import type { AgentRecord, CallRecord } from "@/lib/api";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import AgentTabs from "@/components/dashboard/AgentTabs";
 
@@ -106,6 +109,7 @@ export default function AgentDetailPage() {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [endingCallId, setEndingCallId] = useState<string | null>(null);
 
   useEffect(() => {
     Promise.all([getAgentById(id), getCalls()]).then(([a, allCalls]) => {
@@ -321,8 +325,11 @@ export default function AgentDetailPage() {
                     <TableHead className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                       Duration
                     </TableHead>
-                    <TableHead className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground pr-4">
+                    <TableHead className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                       Started
+                    </TableHead>
+                    <TableHead className="w-20 pr-4 text-right">
+                      Actions
                     </TableHead>
                   </TableRow>
                 </TableHeader>
@@ -378,8 +385,49 @@ export default function AgentDetailPage() {
                         <TableCell className="font-mono text-[12px] tabular-nums text-muted-foreground">
                           {formatDuration(call.duration_seconds)}
                         </TableCell>
-                        <TableCell className="font-mono text-[11px] text-muted-foreground pr-4">
+                        <TableCell className="font-mono text-[11px] text-muted-foreground">
                           {formatDate(call.started_at)}
+                        </TableCell>
+                        <TableCell className="pr-4 text-right">
+                          {call.status === "in_progress" && (
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              disabled={endingCallId === call.id}
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                setEndingCallId(call.id);
+                                try {
+                                  const res = await endCallApi(call.id);
+                                  if (res.ok) {
+                                    toast.success("Live call ended");
+                                    setCalls((prev) =>
+                                      prev.map((c) =>
+                                        c.id === call.id
+                                          ? { ...c, status: "ended" }
+                                          : c,
+                                      ),
+                                    );
+                                  } else {
+                                    toast.error(res.message || "Failed to end call");
+                                  }
+                                } catch {
+                                  toast.error("Failed to end call");
+                                } finally {
+                                  setEndingCallId(null);
+                                }
+                              }}
+                              className="h-7 px-2 text-xs gap-1 shadow-sm font-medium"
+                              title="End live call"
+                            >
+                              {endingCallId === call.id ? (
+                                <Loader2 className="size-3 animate-spin" />
+                              ) : (
+                                <PhoneOff className="size-3" />
+                              )}
+                              <span>End</span>
+                            </Button>
+                          )}
                         </TableCell>
                       </TableRow>
                     );

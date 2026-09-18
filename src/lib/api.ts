@@ -159,6 +159,23 @@ export async function deleteCallApi(id: string): Promise<boolean> {
   return res.ok || res.status === 204;
 }
 
+export async function endCallApi(id: string): Promise<{ ok: boolean; message?: string }> {
+  const auth = await authHeaders();
+  try {
+    const res = await fetch(`${BASE}/api/calls/${id}/end`, {
+      method: 'POST',
+      headers: { ...auth, 'Content-Type': 'application/json' },
+    });
+    const json = await res.json().catch(() => null);
+    if (!res.ok) {
+      return { ok: false, message: json?.detail ?? json?.message ?? 'Failed to end call' };
+    }
+    return { ok: true, message: json?.message };
+  } catch (err) {
+    return { ok: false, message: 'Network error — could not reach server' };
+  }
+}
+
 export async function getConversation(callId: string): Promise<TurnRecord[]> {
   const data = await apiFetch<{ turns: TurnRecord[] }>(`/api/conversation/db/${callId}`);
   return data?.turns ?? [];
