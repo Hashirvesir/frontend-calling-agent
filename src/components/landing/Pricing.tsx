@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Check, ArrowRight } from '../Icons';
+import TalkToSalesDialog from './TalkToSalesDialog';
 
 const plans = [
   {
@@ -151,9 +152,17 @@ export default function Pricing() {
               {plan.desc}
             </p>
 
-            <Link href={plan.href} className={plan.ctaClass} style={{ width: '100%' }}>
-              {plan.cta} {plan.featured && <ArrowRight size={16} />}
-            </Link>
+            {plan.name === 'Enterprise' ? (
+              <TalkToSalesDialog>
+                <button type="button" className={plan.ctaClass} style={{ width: '100%', cursor: 'pointer' }}>
+                  {plan.cta}
+                </button>
+              </TalkToSalesDialog>
+            ) : (
+              <Link href={plan.href} className={plan.ctaClass} style={{ width: '100%' }}>
+                {plan.cta} {plan.featured && <ArrowRight size={16} />}
+              </Link>
+            )}
 
             <div style={{
               height: '1px',

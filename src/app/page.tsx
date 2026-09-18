@@ -7,6 +7,7 @@ import VoiceDemo from '@/components/landing/VoiceDemo';
 import Features from '@/components/landing/Features';
 import DashboardPreview from '@/components/landing/DashboardPreview';
 import Pricing from '@/components/landing/Pricing';
+import TalkToSalesSection from '@/components/landing/TalkToSalesSection';
 import Testimonials from '@/components/landing/Testimonials';
 import CTA from '@/components/landing/CTA';
 import Footer from '@/components/landing/Footer';
@@ -70,6 +71,7 @@ export default function Home() {
         <div className="reveal"><Features /></div>
         <div className="reveal"><DashboardPreview /></div>
         <div className="reveal"><Pricing /></div>
+        <div className="reveal"><TalkToSalesSection /></div>
         <div className="reveal"><Testimonials /></div>
         <div className="reveal"><CTA /></div>
         <Footer />

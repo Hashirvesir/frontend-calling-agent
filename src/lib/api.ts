@@ -1041,3 +1041,32 @@ export async function dialOutbound(
     return { ok: false, error: 'Network error' };
   }
 }
+
+// ── Talk to Sales (Inbound Leads) ──────────────────────────────────────────
+
+export type SalesLeadData = {
+  name: string;
+  email: string;
+  phone_number: string;
+  company_name?: string;
+  use_case: string;
+  call_volume: string;
+  notes?: string;
+};
+
+export async function submitSalesLead(data: SalesLeadData): Promise<{ ok: boolean; message?: string }> {
+  try {
+    const res = await fetch(`${BASE}/api/sales-lead`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    const json = await res.json().catch(() => null);
+    if (!res.ok) {
+      return { ok: false, message: json?.detail ?? json?.message ?? 'Failed to submit sales request' };
+    }
+    return { ok: true, message: json?.message };
+  } catch {
+    return { ok: false, message: 'Network error — could not reach server' };
+  }
+}

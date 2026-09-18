@@ -35,22 +35,28 @@ export default function Nav() {
 
         {/* Nav Links */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }} className="nav-links">
-          {['Platform', 'Features', 'Pricing', 'Customers', 'Docs'].map(link => (
+          {[
+            { label: 'Platform', href: '#' },
+            { label: 'Features', href: '#' },
+            { label: 'Pricing', href: '#' },
+            { label: 'Talk to Sales', href: '#talk-to-sales' },
+          ].map(link => (
             <a
-              key={link}
-              href="#"
+              key={link.label}
+              href={link.href}
               style={{
                 padding: '6px 12px',
                 fontSize: '14px',
-                color: 'var(--fg-2)',
+                color: link.label === 'Talk to Sales' ? 'var(--chart-1)' : 'var(--fg-2)',
                 textDecoration: 'none',
                 borderRadius: '8px',
                 transition: 'color 150ms',
+                fontWeight: link.label === 'Talk to Sales' ? 500 : 400,
               }}
               onMouseEnter={e => (e.currentTarget.style.color = 'var(--fg-0)')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'var(--fg-2)')}
+              onMouseLeave={e => (e.currentTarget.style.color = link.label === 'Talk to Sales' ? 'var(--chart-1)' : 'var(--fg-2)')}
             >
-              {link}
+              {link.label}
             </a>
           ))}
         </div>
