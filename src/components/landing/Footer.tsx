@@ -96,17 +96,6 @@ export default function Footer() {
           © 2026 Invenco, Inc.
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <div style={{
-              width: '6px',
-              height: '6px',
-              borderRadius: '50%',
-              background: 'var(--status-success)',
-            }} />
-            <span style={{ fontSize: '12px', color: 'var(--fg-3)', fontFamily: 'var(--font-geist-mono)' }}>
-              All systems normal
-            </span>
-          </div>
           <span style={{ fontSize: '12px', color: 'var(--fg-4)', fontFamily: 'var(--font-geist-mono)' }}>
             SOC 2 · HIPAA · GDPR
           </span>

@@ -12,7 +12,7 @@ export default function CTA() {
         border: '1px solid var(--border-2)',
         borderRadius: '20px',
         background: 'var(--tint-1)',
-        padding: '80px 40px',
+        padding: 'clamp(48px, 8vw, 80px) clamp(20px, 5vw, 40px)',
         textAlign: 'center',
       }}>
         <div style={{

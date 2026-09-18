@@ -185,6 +185,9 @@ export default function AgentTestPage() {
   const enqueuePlaybackPCM = useCallback((int16: Int16Array) => {
     const ctx = playbackCtxRef.current;
     if (!ctx) return;
+    if (ctx.state === 'suspended') {
+      void ctx.resume().catch(() => {});
+    }
     const float32 = new Float32Array(int16.length);
     for (let i = 0; i < int16.length; i++) float32[i] = int16[i] / 32768;
     const buffer = ctx.createBuffer(1, float32.length, sampleRateRef.current);
@@ -365,6 +368,9 @@ export default function AgentTestPage() {
 
     const AudioCtxCls = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
     const playbackCtx = new AudioCtxCls();
+    if (playbackCtx.state === 'suspended') {
+      await playbackCtx.resume().catch(() => {});
+    }
     playbackCtxRef.current = playbackCtx;
     nextStartTimeRef.current = playbackCtx.currentTime;
 

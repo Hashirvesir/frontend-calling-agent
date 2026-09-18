@@ -5,7 +5,7 @@ import { Logo, ArrowRight } from '../Icons';
 
 export default function Nav() {
   return (
-    <header style={{
+    <header className="landing-header" style={{
       position: 'fixed',
       top: '12px',
       left: '50%',
@@ -14,7 +14,7 @@ export default function Nav() {
       maxWidth: '1200px',
       zIndex: 50,
     }}>
-      <nav style={{
+      <nav className="landing-nav" style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',

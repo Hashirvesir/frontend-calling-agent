@@ -96,19 +96,14 @@ export default function DashboardPreview() {
         </div>
 
         {/* App Interior */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '200px 1fr',
-          minHeight: '520px',
-        }}>
+        <div style={{ minHeight: '520px' }} className="dashboard-interior-grid">
           {/* Sidebar */}
           <div style={{
             borderRight: '1px solid var(--border-1)',
             padding: '16px 8px',
-            display: 'flex',
             flexDirection: 'column',
             gap: '2px',
-          }}>
+          }} className="dashboard-sidebar">
             {sidebarItems.map(item => (
               <div
                 key={item.label}
@@ -158,7 +153,7 @@ export default function DashboardPreview() {
           </div>
 
           {/* Main */}
-          <div style={{ padding: '20px', overflow: 'hidden' }}>
+          <div style={{ padding: 'clamp(12px, 3vw, 20px)', overflow: 'hidden' }}>
             {/* Header + Metrics */}
             <div style={{ marginBottom: '16px' }}>
               <div style={{ fontSize: '15px', fontWeight: 600, color: 'var(--fg-0)', marginBottom: '4px' }}>Calls</div>
@@ -170,7 +165,7 @@ export default function DashboardPreview() {
               }}>
                 Today · 312 inbound · 47 outbound
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', marginBottom: '16px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', marginBottom: '16px' }} className="dashboard-metrics-grid">
                 {[
                   { label: 'ANSWERED', value: '98.4%' },
                   { label: 'AVG LATENCY', value: '312ms' },
@@ -194,11 +189,13 @@ export default function DashboardPreview() {
             <div style={{
               borderRadius: '8px',
               border: '1px solid var(--border-1)',
-              overflow: 'hidden',
+              overflowX: 'auto',
+              WebkitOverflowScrolling: 'touch',
             }}>
+              <div style={{ minWidth: '480px' }}>
               <div style={{
                 display: 'grid',
-                gridTemplateColumns: '20px 1fr 1fr 80px 50px 50px',
+                gridTemplateColumns: '20px 1.4fr 1.2fr 80px 50px 50px',
                 gap: '8px',
                 padding: '8px 12px',
                 borderBottom: '1px solid var(--border-1)',
@@ -241,6 +238,7 @@ export default function DashboardPreview() {
                   <div style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '11px', color: 'var(--fg-3)' }}>{row.lat}</div>
                 </div>
               ))}
+              </div>
             </div>
           </div>
         </div>

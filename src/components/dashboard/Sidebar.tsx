@@ -20,7 +20,6 @@ import {
   Bot,
   FileText,
   Settings,
-  Circle,
 } from "lucide-react";
 import { Logo } from "@/components/Icons";
 
@@ -104,13 +103,6 @@ export default function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
 
-        {/* Status line — only visible when expanded */}
-        <div className="flex items-center gap-2 px-2 pb-1 group-data-[collapsible=icon]:hidden">
-          <Circle className="size-2 fill-chart-2 text-chart-2 opacity-70" />
-          <span className="font-mono text-[9px] tracking-[0.15em] text-muted-foreground/40 uppercase">
-            System Online
-          </span>
-        </div>
       </SidebarFooter>
     </Sidebar>
   );

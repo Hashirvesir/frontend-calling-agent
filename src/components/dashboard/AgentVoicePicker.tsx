@@ -42,7 +42,7 @@ export default function AgentVoicePicker({
 
   const field = language === 'en' ? 'voice_english' : 'voice_urdu';
   const value = language === 'en' ? voiceEnglish : voiceUrdu;
-  const langLabel = language === 'en' ? 'English' : 'Urdu';
+  const langLabel = language === 'en' ? 'English' : language === 'auto' ? 'Agent' : 'Urdu';
 
   if (loading) {
     return (

@@ -141,7 +141,11 @@ export default function AgentCreatePage() {
                 <div className="flex flex-col gap-2">
                   <Label className="text-xs text-muted-foreground">Default Language</Label>
                   <div className="flex gap-2">
-                    {([{ id: 'ur', label: 'Urdu' }, { id: 'en', label: 'English' }]).map(lang => (
+                    {([
+                      { id: 'ur', label: 'Urdu' },
+                      { id: 'en', label: 'English' },
+                      { id: 'auto', label: 'Auto' }
+                    ]).map(lang => (
                       <button
                         key={lang.id}
                         type="button"

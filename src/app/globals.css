@@ -185,6 +185,19 @@ body::before {
 .reveal { opacity:0; transform:translateY(4px); transition:opacity var(--dur-page,600ms) var(--ease-smooth), transform var(--dur-page,600ms) var(--ease-smooth); }
 .reveal.in { opacity:1; transform:translateY(0); }
 
+/* ── Layout & Responsive Utilities ── */
+.dashboard-interior-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+}
+.dashboard-sidebar {
+  display: flex;
+}
+
+@media (max-width: 1024px) {
+  .features-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
 @media (max-width: 768px) {
   .hero-grid { grid-template-columns: 1fr !important; }
   .features-grid { grid-template-columns: 1fr !important; }
@@ -194,4 +207,59 @@ body::before {
   .demo-grid { grid-template-columns: 1fr !important; }
   .footer-grid { grid-template-columns: 1fr 1fr !important; }
   .nav-links { display: none !important; }
+  
+  .dashboard-interior-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .dashboard-sidebar {
+    border-right: none !important;
+    border-bottom: 1px solid var(--border-1) !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    padding: 10px !important;
+  }
+  .dashboard-sidebar > div {
+    display: inline-flex !important;
+  }
+  .dashboard-sidebar > div:last-child {
+    display: none !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .landing-header {
+    width: calc(100% - 24px) !important;
+    top: 8px !important;
+  }
+  .landing-nav {
+    padding: 0 12px !important;
+    height: 48px !important;
+  }
+  .demo-call-form {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .demo-call-form select,
+  .demo-call-form input,
+  .demo-call-form button {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+  }
+  .dashboard-metrics-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-grid { grid-template-columns: 1fr !important; }
+  .btn-lg {
+    height: 44px;
+    padding: 0 16px;
+    font-size: 14px;
+    width: 100%;
+  }
+  .dashboard-metrics-grid {
+    grid-template-columns: 1fr !important;
+  }
 }

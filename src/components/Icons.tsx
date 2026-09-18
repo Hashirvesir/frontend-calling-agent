@@ -1,20 +1,23 @@
+import { CSSProperties } from "react";
+
 type IconProps = {
   size?: number;
   strokeWidth?: number;
   className?: string;
+  style?: CSSProperties;
 };
 
-export function Phone({ size = 16, strokeWidth = 1.5, className }: IconProps) {
+export function Phone({ size = 16, strokeWidth = 1.5, className, style }: IconProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
       <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.59a16 16 0 0 0 5.5 5.5l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
     </svg>
   );
 }
 
-export function PhoneIncoming({ size = 16, strokeWidth = 1.5, className }: IconProps) {
+export function PhoneIncoming({ size = 16, strokeWidth = 1.5, className, style }: IconProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
       <polyline points="16 2 16 8 22 8"/>
       <line x1="23" y1="1" x2="16" y2="8"/>
       <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.59a16 16 0 0 0 5.5 5.5l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
@@ -68,9 +71,9 @@ export function Calendar({ size = 16, strokeWidth = 1.5, className }: IconProps)
   );
 }
 
-export function Globe({ size = 16, strokeWidth = 1.5, className }: IconProps) {
+export function Globe({ size = 16, strokeWidth = 1.5, className, style }: IconProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
       <circle cx="12" cy="12" r="10"/>
       <line x1="2" y1="12" x2="22" y2="12"/>
       <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
@@ -78,9 +81,9 @@ export function Globe({ size = 16, strokeWidth = 1.5, className }: IconProps) {
   );
 }
 
-export function Languages({ size = 16, strokeWidth = 1.5, className }: IconProps) {
+export function Languages({ size = 16, strokeWidth = 1.5, className, style }: IconProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
       <path d="m5 8 6 6"/>
       <path d="m4 14 6-6 2-3"/>
       <path d="M2 5h12"/>
@@ -91,18 +94,18 @@ export function Languages({ size = 16, strokeWidth = 1.5, className }: IconProps
   );
 }
 
-export function ChartLine({ size = 16, strokeWidth = 1.5, className }: IconProps) {
+export function ChartLine({ size = 16, strokeWidth = 1.5, className, style }: IconProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
       <line x1="3" y1="20" x2="21" y2="20"/>
       <polyline points="3 14 8 9 13 14 18 7 21 10"/>
     </svg>
   );
 }
 
-export function ChartBar({ size = 16, strokeWidth = 1.5, className }: IconProps) {
+export function ChartBar({ size = 16, strokeWidth = 1.5, className, style }: IconProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
       <line x1="12" y1="20" x2="12" y2="10"/>
       <line x1="18" y1="20" x2="18" y2="4"/>
       <line x1="6" y1="20" x2="6" y2="16"/>
@@ -111,18 +114,18 @@ export function ChartBar({ size = 16, strokeWidth = 1.5, className }: IconProps)
   );
 }
 
-export function TrendingUp({ size = 16, strokeWidth = 1.5, className }: IconProps) {
+export function TrendingUp({ size = 16, strokeWidth = 1.5, className, style }: IconProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
       <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
       <polyline points="17 6 23 6 23 12"/>
     </svg>
   );
 }
 
-export function Zap({ size = 16, strokeWidth = 1.5, className }: IconProps) {
+export function Zap({ size = 16, strokeWidth = 1.5, className, style }: IconProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
       <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
     </svg>
   );
@@ -206,9 +209,9 @@ export function ChevronDown({ size = 16, strokeWidth = 1.5, className }: IconPro
   );
 }
 
-export function Shield({ size = 16, strokeWidth = 1.5, className }: IconProps) {
+export function Shield({ size = 16, strokeWidth = 1.5, className, style }: IconProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
     </svg>
   );
