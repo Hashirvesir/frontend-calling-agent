@@ -131,7 +131,9 @@ export default function VoiceDemo() {
 
   const handleCall = async (e: React.FormEvent) => {
     e.preventDefault();
-    const clean = phone.trim().replace(/\D/g, '');
+    let clean = phone.trim().replace(/\D/g, '');
+    // If user enters local format with leading 0 (e.g. 0324...), strip it since country code is already selected
+    clean = clean.replace(/^0+/, '');
     if (clean.length < 7) { setError('Please enter a valid phone number.'); return; }
     setError('');
     const fullPhone = `${countryCode}${clean}`;
