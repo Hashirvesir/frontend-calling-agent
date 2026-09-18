@@ -74,10 +74,14 @@ export default function VoiceDemo() {
     return () => clearInterval(interval);
   }, [playing]);
 
-  // Countdown timer
+  // Countdown timer — automatically open feedback popup when 15 seconds finish
   useEffect(() => {
     if (callStatus !== 'calling') return;
-    if (countdown <= 0) { setCallStatus('done'); return; }
+    if (countdown <= 0) {
+      setCallStatus('done');
+      setFeedbackOpen(true);
+      return;
+    }
     const t = setTimeout(() => setCountdown(c => c - 1), 1000);
     return () => clearTimeout(t);
   }, [callStatus, countdown]);
@@ -483,24 +487,14 @@ export default function VoiceDemo() {
                   )}
                 </div>
               </div>
-              <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <button
-                  type="button"
-                  className="btn btn-secondary btn-sm"
-                  onClick={() => setFeedbackOpen(true)}
-                  style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
-                >
-                  <Star className="size-3.5 fill-amber-400 text-amber-400" />
-                  Feedback
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-secondary btn-sm"
-                  onClick={() => { setCallStatus('idle'); setPhone(''); }}
-                >
-                  Another Call
-                </button>
-              </div>
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                onClick={() => { setCallStatus('idle'); setPhone(''); }}
+                style={{ marginLeft: 'auto' }}
+              >
+                Another Call
+              </button>
             </div>
           )}
         </div>
