@@ -10,6 +10,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Star, Sparkles, CheckCircle2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const WAVEFORM_BARS = 40;
 
@@ -37,9 +47,20 @@ export default function VoiceDemo() {
   // Call widget state
   const [countryCode, setCountryCode] = useState('+92');
   const [phone, setPhone] = useState('');
-  const [callStatus, setCallStatus] = useState<'idle' | 'calling' | 'done'>('idle');
+  const [callStatus, setCallStatus] = useState<'idle' | 'calling' | 'done' | 'ended'>('idle');
   const [countdown, setCountdown] = useState(15);
   const [error, setError] = useState('');
+
+  // Feedback state
+  const [callControlId, setCallControlId] = useState<string | null>(null);
+  const [lastCalledNumber, setLastCalledNumber] = useState<string>('');
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [rating, setRating] = useState<number>(5);
+  const [hoverRating, setHoverRating] = useState<number>(0);
+  const [comment, setComment] = useState('');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [feedbackSubmitting, setFeedbackSubmitting] = useState(false);
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
 
   // Transcript player
   useEffect(() => {
@@ -61,33 +82,96 @@ export default function VoiceDemo() {
     return () => clearTimeout(t);
   }, [callStatus, countdown]);
 
+  // Poll call status from backend to detect call end & open feedback modal
+  useEffect(() => {
+    if (!callControlId || (callStatus !== 'calling' && callStatus !== 'done')) {
+      return;
+    }
+    let isMounted = true;
+    const poll = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/api/public-call/status?ccid=${encodeURIComponent(callControlId)}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!isMounted) return;
+
+        if (data.status === 'ended' || data.status === 'stream_failed') {
+          setCallStatus('ended');
+          setFeedbackOpen(true);
+        }
+      } catch {
+        // ignore polling network errors
+      }
+    };
+
+    const interval = setInterval(poll, 2500);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, [callControlId, callStatus]);
+
   const handleToggle = () => {
     if (!playing) { setStep(0); setPlaying(true); }
     else setPlaying(false);
   };
 
-    const handleCall = async (e: React.FormEvent) => {
+  const handleCall = async (e: React.FormEvent) => {
     e.preventDefault();
     const clean = phone.trim().replace(/\D/g, '');
     if (clean.length < 7) { setError('Please enter a valid phone number.'); return; }
     setError('');
+    const fullPhone = `${countryCode}${clean}`;
+    setLastCalledNumber(fullPhone);
     setCallStatus('calling');
     setCountdown(15);
     try {
       const res = await fetch(`${API_BASE}/api/public-call`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone_number: `${countryCode}${clean}`, agent_id: 'sana_bank', language: 'auto' }),
+        body: JSON.stringify({ phone_number: fullPhone, agent_id: 'sana_bank', language: 'auto' }),
       });
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
         setError(data.detail || 'Call request rejected by carrier');
         setCallStatus('idle');
+        return;
+      }
+      const ccid = data.call_control_id || data.telnyx?.data?.call_control_id;
+      if (ccid) {
+        setCallControlId(ccid);
       }
     } catch (err) {
       console.error('Call request error:', err);
       setError('Could not reach call server. Make sure backend is running.');
       setCallStatus('idle');
+    }
+  };
+
+  const handleFeedbackSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setFeedbackSubmitting(true);
+    try {
+      await fetch(`${API_BASE}/api/public-call/feedback`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          rating,
+          comment: comment.trim(),
+          call_control_id: callControlId,
+          phone_number: lastCalledNumber,
+          tags: selectedTags,
+        }),
+      });
+      setFeedbackSubmitted(true);
+      setTimeout(() => {
+        setFeedbackOpen(false);
+        setFeedbackSubmitted(false);
+      }, 2000);
+    } catch (err) {
+      console.error('Feedback submit error:', err);
+    } finally {
+      setFeedbackSubmitting(false);
     }
   };
 
@@ -370,41 +454,183 @@ export default function VoiceDemo() {
             </div>
           )}
 
-          {/* DONE — success */}
-          {callStatus === 'done' && (
+          {/* DONE or ENDED — success / finished */}
+          {(callStatus === 'done' || callStatus === 'ended') && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
               <div style={{
                 width: '36px', height: '36px', borderRadius: '50%', flexShrink: 0,
-                background: 'rgba(134,239,172,0.1)',
-                border: '1px solid rgba(134,239,172,0.3)',
+                background: callStatus === 'ended' ? 'rgba(59,130,246,0.1)' : 'rgba(134,239,172,0.1)',
+                border: callStatus === 'ended' ? '1px solid rgba(59,130,246,0.3)' : '1px solid rgba(134,239,172,0.3)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: 'var(--status-success)',
+                color: callStatus === 'ended' ? '#60a5fa' : 'var(--status-success)',
               }}>
                 <Check size={16} />
               </div>
               <div>
                 <div style={{ fontSize: '14px', color: 'var(--fg-0)', fontWeight: 500 }}>
-                  Call dispatched!
+                  {callStatus === 'ended' ? 'Call Ended' : 'Call dispatched!'}
                 </div>
                 <div style={{ fontSize: '12px', color: 'var(--fg-3)', marginTop: '2px' }}>
-                  Your phone is ringing from{' '}
-                  <span style={{ color: 'var(--status-live)', fontFamily: 'var(--font-geist-mono)' }}>
-                    +1 (202) 919-6011
-                  </span>. Answer to speak with the AI Agent.
+                  {callStatus === 'ended' ? (
+                    <span>Thank you for trying our voice agent! Please share your feedback.</span>
+                  ) : (
+                    <span>
+                      Your phone is ringing from{' '}
+                      <span style={{ color: 'var(--status-live)', fontFamily: 'var(--font-geist-mono)' }}>
+                        +1 (202) 919-6011
+                      </span>. Answer to speak with the AI Agent.
+                    </span>
+                  )}
                 </div>
               </div>
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                onClick={() => { setCallStatus('idle'); setPhone(''); }}
-                style={{ marginLeft: 'auto' }}
-              >
-                Another Call
-              </button>
+              <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => setFeedbackOpen(true)}
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                >
+                  <Star className="size-3.5 fill-amber-400 text-amber-400" />
+                  Feedback
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => { setCallStatus('idle'); setPhone(''); }}
+                >
+                  Another Call
+                </button>
+              </div>
             </div>
           )}
         </div>
       </div>
+
+      {/* ── Call Feedback Popup (shadcn/ui Dialog) ── */}
+      <Dialog open={feedbackOpen} onOpenChange={setFeedbackOpen}>
+        <DialogContent className="max-w-md w-[92vw] p-6 bg-[var(--surface-1)] border border-[var(--border-2)] rounded-2xl text-[var(--fg-0)] shadow-2xl">
+          {feedbackSubmitted ? (
+            <div className="flex flex-col items-center justify-center py-8 text-center gap-3">
+              <div className="size-12 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 animate-in zoom-in-50 duration-300">
+                <CheckCircle2 className="size-6" />
+              </div>
+              <h3 className="text-base font-semibold text-[var(--fg-0)]">Thank you for your feedback!</h3>
+              <p className="text-xs text-[var(--fg-2)] max-w-xs">
+                Your feedback has been saved to the database. It helps us improve our AI models.
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={handleFeedbackSubmit} className="flex flex-col gap-4">
+              <div>
+                <DialogTitle className="text-lg font-semibold flex items-center gap-2 text-[var(--fg-0)]">
+                  <Sparkles className="size-4 text-amber-400" />
+                  How was your AI Call?
+                </DialogTitle>
+                <DialogDescription className="text-xs text-[var(--fg-3)] mt-1">
+                  Rate your conversation experience with our voice assistant.
+                </DialogDescription>
+              </div>
+
+              {/* Star Rating */}
+              <div className="flex flex-col items-center gap-1.5 py-2">
+                <div className="flex items-center gap-2">
+                  {[1, 2, 3, 4, 5].map((star) => {
+                    const isFilled = (hoverRating || rating) >= star;
+                    return (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setRating(star)}
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(0)}
+                        className="p-1 transition-transform hover:scale-110 focus:outline-none cursor-pointer"
+                        aria-label={`${star} star`}
+                      >
+                        <Star
+                          className={cn(
+                            "size-7 transition-colors",
+                            isFilled
+                              ? "fill-amber-400 text-amber-400"
+                              : "fill-transparent text-[var(--fg-3)] opacity-40 hover:opacity-80"
+                          )}
+                        />
+                      </button>
+                    );
+                  })}
+                </div>
+                <span className="text-[11px] font-mono text-[var(--fg-2)]">
+                  {rating === 5 ? 'Excellent ⭐⭐⭐⭐⭐' : rating === 4 ? 'Very Good ⭐⭐⭐⭐' : rating === 3 ? 'Good ⭐⭐⭐' : rating === 2 ? 'Fair ⭐⭐' : 'Poor ⭐'}
+                </span>
+              </div>
+
+              {/* Quick feedback tags */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-[var(--fg-3)]">
+                  What went well?
+                </label>
+                <div className="flex flex-wrap gap-1.5">
+                  {['Natural Voice', 'Fast Response', 'Clear Audio', 'Accurate Answers', 'Good Accent'].map((tag) => {
+                    const selected = selectedTags.includes(tag);
+                    return (
+                      <button
+                        key={tag}
+                        type="button"
+                        onClick={() => {
+                          setSelectedTags(prev =>
+                            prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+                          );
+                        }}
+                        className={cn(
+                          "text-xs px-2.5 py-1 rounded-full border transition-all cursor-pointer",
+                          selected
+                            ? "bg-primary/20 border-primary text-primary font-medium"
+                            : "bg-[var(--surface-2)] border-[var(--border-2)] text-[var(--fg-2)] hover:border-[var(--fg-3)]"
+                        )}
+                      >
+                        {selected ? `✓ ${tag}` : `+ ${tag}`}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Comment textarea */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-[var(--fg-3)]">
+                  Comments (Optional)
+                </label>
+                <Textarea
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  placeholder="Tell us what you liked or how we can improve..."
+                  className="text-xs bg-[var(--surface-2)] border-[var(--border-2)] text-[var(--fg-0)] min-h-[75px]"
+                />
+              </div>
+
+              {/* Action buttons */}
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-[var(--border-2)]">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setFeedbackOpen(false)}
+                  className="text-xs text-[var(--fg-2)] hover:text-[var(--fg-0)]"
+                >
+                  Skip
+                </Button>
+                <Button
+                  type="submit"
+                  size="sm"
+                  disabled={feedbackSubmitting}
+                  className="text-xs"
+                >
+                  {feedbackSubmitting ? 'Saving...' : 'Submit Feedback'}
+                </Button>
+              </div>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }
