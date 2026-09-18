@@ -55,12 +55,21 @@ export default function VoiceDemo() {
   const [callControlId, setCallControlId] = useState<string | null>(null);
   const [lastCalledNumber, setLastCalledNumber] = useState<string>('');
   const [feedbackOpen, setFeedbackOpen] = useState(false);
-  const [rating, setRating] = useState<number>(5);
+  const [rating, setRating] = useState<number>(0);
   const [hoverRating, setHoverRating] = useState<number>(0);
   const [comment, setComment] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [feedbackSubmitting, setFeedbackSubmitting] = useState(false);
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+
+  const openFeedbackModal = () => {
+    setRating(0);
+    setHoverRating(0);
+    setComment('');
+    setSelectedTags([]);
+    setFeedbackSubmitted(false);
+    setFeedbackOpen(true);
+  };
 
   // Transcript player
   useEffect(() => {
@@ -79,7 +88,7 @@ export default function VoiceDemo() {
     if (callStatus !== 'calling') return;
     if (countdown <= 0) {
       setCallStatus('done');
-      setFeedbackOpen(true);
+      openFeedbackModal();
       return;
     }
     const t = setTimeout(() => setCountdown(c => c - 1), 1000);
@@ -101,7 +110,7 @@ export default function VoiceDemo() {
 
         if (data.status === 'ended' || data.status === 'stream_failed') {
           setCallStatus('ended');
-          setFeedbackOpen(true);
+          openFeedbackModal();
         }
       } catch {
         // ignore polling network errors
@@ -154,6 +163,7 @@ export default function VoiceDemo() {
 
   const handleFeedbackSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
+    if (rating === 0) return;
     setFeedbackSubmitting(true);
     try {
       await fetch(`${API_BASE}/api/public-call/feedback`, {
@@ -553,7 +563,12 @@ export default function VoiceDemo() {
                   })}
                 </div>
                 <span className="text-[11px] font-mono text-[var(--fg-2)]">
-                  {rating === 5 ? 'Excellent ⭐⭐⭐⭐⭐' : rating === 4 ? 'Very Good ⭐⭐⭐⭐' : rating === 3 ? 'Good ⭐⭐⭐' : rating === 2 ? 'Fair ⭐⭐' : 'Poor ⭐'}
+                  {(hoverRating || rating) === 5 ? 'Excellent ⭐⭐⭐⭐⭐'
+                   : (hoverRating || rating) === 4 ? 'Very Good ⭐⭐⭐⭐'
+                   : (hoverRating || rating) === 3 ? 'Good ⭐⭐⭐'
+                   : (hoverRating || rating) === 2 ? 'Fair ⭐⭐'
+                   : (hoverRating || rating) === 1 ? 'Poor ⭐'
+                   : 'Tap a star to rate (1–5)'}
                 </span>
               </div>
 
@@ -615,7 +630,7 @@ export default function VoiceDemo() {
                 <Button
                   type="submit"
                   size="sm"
-                  disabled={feedbackSubmitting}
+                  disabled={feedbackSubmitting || rating === 0}
                   className="text-xs"
                 >
                   {feedbackSubmitting ? 'Saving...' : 'Submit Feedback'}
