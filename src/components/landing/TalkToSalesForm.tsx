@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { Logo } from '@/components/Icons';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
@@ -12,10 +12,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Loader2 } from 'lucide-react';
+import { Loader2, CheckCircle2 } from 'lucide-react';
 import { submitSalesLead } from '@/lib/api';
 import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
 
 const USE_CASES = [
   'E-commerce COD / Order Verification',
@@ -34,10 +33,10 @@ const CALL_VOLUMES = [
 
 type Props = {
   onSuccess?: () => void;
-  className?: string;
+  showLogo?: boolean;
 };
 
-export default function TalkToSalesForm({ onSuccess, className }: Props) {
+export default function TalkToSalesForm({ onSuccess, showLogo = true }: Props) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -75,13 +74,13 @@ export default function TalkToSalesForm({ onSuccess, className }: Props) {
     setLoading(true);
     try {
       const res = await submitSalesLead({
-        name,
-        email,
-        phone_number: phone,
-        company_name: company,
+        name: name.trim(),
+        email: email.trim(),
+        phone_number: phone.trim(),
+        company_name: company.trim(),
         use_case: useCase,
         call_volume: callVolume,
-        notes,
+        notes: notes.trim(),
       });
 
       if (res.ok) {
@@ -100,15 +99,19 @@ export default function TalkToSalesForm({ onSuccess, className }: Props) {
 
   if (submitted) {
     return (
-      <div className={cn('flex flex-col items-center justify-center text-center p-8 rounded-xl border border-white/10 bg-black text-white', className)}>
-        <h3 className="text-xl font-semibold mb-2">
+      <div style={{ textAlign: 'center', padding: '24px 0' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px', color: 'var(--status-live)' }}>
+          <CheckCircle2 size={44} />
+        </div>
+        <h3 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--fg-0)', marginBottom: '8px', letterSpacing: '-0.02em' }}>
           Thank you, {name}!
         </h3>
-        <p className="text-sm text-neutral-400 max-w-sm mb-6 leading-relaxed">
-          Your inquiry has been received. Our team will review your details and get in touch with you.
+        <p style={{ fontSize: '14px', color: 'var(--fg-3)', lineHeight: 1.6, marginBottom: '24px' }}>
+          Your inquiry has been received. Our team will review your details and contact you.
         </p>
-        <Button
-          variant="outline"
+        <button
+          type="button"
+          className="btn btn-secondary btn-sm"
           onClick={() => {
             setSubmitted(false);
             setName('');
@@ -119,83 +122,105 @@ export default function TalkToSalesForm({ onSuccess, className }: Props) {
             setCallVolume('');
             setNotes('');
           }}
-          className="text-xs bg-transparent border-white/20 text-white hover:bg-white/10"
+          style={{ cursor: 'pointer' }}
         >
           Submit another inquiry
-        </Button>
+        </button>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className={cn('flex flex-col gap-4 text-left text-white', className)}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-1.5">
-          <Label className="text-xs text-neutral-300">
-            Full Name <span className="text-white">*</span>
-          </Label>
-          <Input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Name"
-            className="h-10 bg-black border-white/15 text-white placeholder:text-neutral-500 focus-visible:border-white focus-visible:ring-0"
-            required
-          />
+    <div>
+      {showLogo && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--fg-0)', marginBottom: '24px' }}>
+          <Logo size={22} />
+          <span style={{ fontWeight: 600, fontSize: '15px', letterSpacing: '-0.01em' }}>Invenco</span>
+          <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '10px', color: 'var(--fg-3)', letterSpacing: '0.06em' }}>AI</span>
         </div>
+      )}
 
-        <div className="space-y-1.5">
-          <Label className="text-xs text-neutral-300">
-            Work Email <span className="text-white">*</span>
-          </Label>
-          <Input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="email@company.com"
-            className="h-10 bg-black border-white/15 text-white placeholder:text-neutral-500 focus-visible:border-white focus-visible:ring-0"
-            required
-          />
-        </div>
-
-        <div className="space-y-1.5">
-          <Label className="text-xs text-neutral-300">
-            Phone / WhatsApp <span className="text-white">*</span>
-          </Label>
-          <Input
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="+92 300 1234567"
-            className="h-10 bg-black border-white/15 text-white placeholder:text-neutral-500 focus-visible:border-white focus-visible:ring-0 font-mono text-sm"
-            required
-          />
-        </div>
-
-        <div className="space-y-1.5">
-          <Label className="text-xs text-neutral-300">
-            Company Name
-          </Label>
-          <Input
-            value={company}
-            onChange={(e) => setCompany(e.target.value)}
-            placeholder="Company"
-            className="h-10 bg-black border-white/15 text-white placeholder:text-neutral-500 focus-visible:border-white focus-visible:ring-0"
-          />
-        </div>
+      <div style={{ marginBottom: '24px' }}>
+        <h2 style={{ fontSize: '22px', fontWeight: 600, letterSpacing: '-0.03em', color: 'var(--fg-0)', marginBottom: '6px' }}>
+          Talk to Sales
+        </h2>
+        <p style={{ fontSize: '14px', color: 'var(--fg-3)', lineHeight: 1.5 }}>
+          Tell us about your business and expected call volume
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-1.5">
-          <Label className="text-xs text-neutral-300">
-            Primary Use-Case <span className="text-white">*</span>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <Label htmlFor="sales-name" style={{ color: 'var(--fg-2)', fontSize: '13px' }}>
+            Full name <span style={{ color: 'var(--fg-0)' }}>*</span>
+          </Label>
+          <Input
+            id="sales-name"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            placeholder="Jane Doe"
+            style={{ height: '40px', fontSize: '14px' }}
+            required
+          />
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <Label htmlFor="sales-email" style={{ color: 'var(--fg-2)', fontSize: '13px' }}>
+            Work email <span style={{ color: 'var(--fg-0)' }}>*</span>
+          </Label>
+          <Input
+            id="sales-email"
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            placeholder="you@company.com"
+            autoComplete="email"
+            style={{ height: '40px', fontSize: '14px' }}
+            required
+          />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <Label htmlFor="sales-phone" style={{ color: 'var(--fg-2)', fontSize: '13px' }}>
+              Phone / WhatsApp <span style={{ color: 'var(--fg-0)' }}>*</span>
+            </Label>
+            <Input
+              id="sales-phone"
+              type="tel"
+              value={phone}
+              onChange={e => setPhone(e.target.value)}
+              placeholder="+92 300 1234567"
+              style={{ height: '40px', fontSize: '14px', fontFamily: 'var(--font-geist-mono)' }}
+              required
+            />
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <Label htmlFor="sales-company" style={{ color: 'var(--fg-2)', fontSize: '13px' }}>
+              Company name
+            </Label>
+            <Input
+              id="sales-company"
+              value={company}
+              onChange={e => setCompany(e.target.value)}
+              placeholder="Acme Inc."
+              style={{ height: '40px', fontSize: '14px' }}
+            />
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <Label style={{ color: 'var(--fg-2)', fontSize: '13px' }}>
+            Primary Use-Case <span style={{ color: 'var(--fg-0)' }}>*</span>
           </Label>
           <Select value={useCase} onValueChange={(val) => setUseCase(val ?? '')}>
-            <SelectTrigger className="h-10 bg-black border-white/15 text-white text-xs text-left focus-visible:border-white focus-visible:ring-0">
+            <SelectTrigger style={{ height: '40px', fontSize: '14px' }}>
               <SelectValue placeholder="Select use-case" />
             </SelectTrigger>
-            <SelectContent side="bottom" align="start" className="bg-black border-white/15 text-white">
+            <SelectContent side="bottom" align="start">
               {USE_CASES.map((uc) => (
-                <SelectItem key={uc} value={uc} className="text-xs text-neutral-200 focus:bg-white focus:text-black cursor-pointer">
+                <SelectItem key={uc} value={uc} style={{ fontSize: '13px', cursor: 'pointer' }}>
                   {uc}
                 </SelectItem>
               ))}
@@ -203,51 +228,61 @@ export default function TalkToSalesForm({ onSuccess, className }: Props) {
           </Select>
         </div>
 
-        <div className="space-y-1.5">
-          <Label className="text-xs text-neutral-300">
-            Monthly Call Volume <span className="text-white">*</span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <Label style={{ color: 'var(--fg-2)', fontSize: '13px' }}>
+            Expected Monthly Call Volume <span style={{ color: 'var(--fg-0)' }}>*</span>
           </Label>
           <Select value={callVolume} onValueChange={(val) => setCallVolume(val ?? '')}>
-            <SelectTrigger className="h-10 bg-black border-white/15 text-white text-xs text-left focus-visible:border-white focus-visible:ring-0">
+            <SelectTrigger style={{ height: '40px', fontSize: '14px' }}>
               <SelectValue placeholder="Select call volume" />
             </SelectTrigger>
-            <SelectContent side="bottom" align="start" className="bg-black border-white/15 text-white">
+            <SelectContent side="bottom" align="start">
               {CALL_VOLUMES.map((cv) => (
-                <SelectItem key={cv} value={cv} className="text-xs text-neutral-200 focus:bg-white focus:text-black cursor-pointer">
+                <SelectItem key={cv} value={cv} style={{ fontSize: '13px', cursor: 'pointer' }}>
                   {cv}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
-      </div>
 
-      <div className="space-y-1.5">
-        <Label className="text-xs text-neutral-300">
-          Notes
-        </Label>
-        <Textarea
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          placeholder="Tell us about your requirements..."
-          className="min-h-[80px] bg-black border-white/15 text-white text-xs placeholder:text-neutral-500 resize-none focus-visible:border-white focus-visible:ring-0"
-        />
-      </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <Label htmlFor="sales-notes" style={{ color: 'var(--fg-2)', fontSize: '13px' }}>
+            Notes (optional)
+          </Label>
+          <Textarea
+            id="sales-notes"
+            value={notes}
+            onChange={e => setNotes(e.target.value)}
+            placeholder="Tell us about your requirements..."
+            style={{ minHeight: '72px', fontSize: '13px', resize: 'none' }}
+          />
+        </div>
 
-      <Button
-        type="submit"
-        disabled={loading}
-        className="w-full h-10 mt-2 bg-white text-black hover:bg-neutral-200 font-medium text-sm transition-all cursor-pointer"
-      >
-        {loading ? (
-          <div className="flex items-center gap-2">
-            <Loader2 className="size-4 animate-spin" />
-            <span>Submitting...</span>
-          </div>
-        ) : (
-          <span>Submit</span>
-        )}
-      </Button>
-    </form>
+        <button
+          type="submit"
+          className="btn btn-primary"
+          disabled={loading}
+          style={{
+            width: '100%',
+            height: '40px',
+            marginTop: '4px',
+            fontSize: '14px',
+            borderRadius: '10px',
+            opacity: loading ? 0.7 : 1,
+            cursor: 'pointer',
+          }}
+        >
+          {loading ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
+              <Loader2 className="animate-spin" size={16} />
+              <span>Submitting…</span>
+            </div>
+          ) : (
+            'Submit'
+          )}
+        </button>
+      </form>
+    </div>
   );
 }

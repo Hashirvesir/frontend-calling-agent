@@ -8,27 +8,22 @@ export default function TalkToSalesSection() {
       id="talk-to-sales"
       style={{
         padding: '80px 24px',
-        maxWidth: '640px',
+        maxWidth: '460px',
         margin: '0 auto',
       }}
     >
       <div
         style={{
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: '16px',
-          background: '#000000',
-          padding: 'clamp(24px, 4vw, 40px)',
+          background: 'rgba(10,10,11,0.70)',
+          backdropFilter: 'blur(24px) saturate(160%)',
+          WebkitBackdropFilter: 'blur(24px) saturate(160%)',
+          border: '1px solid var(--border-2)',
+          borderRadius: '20px',
+          padding: 'clamp(28px, 5vw, 40px) clamp(20px, 4vw, 36px)',
+          boxShadow: 'var(--shadow-glass)',
         }}
-        className="shadow-2xl text-center"
       >
-        <h2 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight mb-2">
-          Talk to Sales
-        </h2>
-        <p className="text-sm text-neutral-400 mb-6">
-          Tell us about your business and expected call volume.
-        </p>
-
-        <TalkToSalesForm />
+        <TalkToSalesForm showLogo={true} />
       </div>
     </section>
   );

@@ -4,9 +4,6 @@ import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
 import TalkToSalesForm from './TalkToSalesForm';
@@ -25,17 +22,11 @@ export default function TalkToSalesDialog({ children, open: controlledOpen, onOp
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       {children && <DialogTrigger>{children}</DialogTrigger>}
-      <DialogContent className="max-w-lg p-6 bg-black border border-white/10 text-white rounded-xl max-h-[92vh] overflow-y-auto">
-        <DialogHeader className="text-left mb-3">
-          <DialogTitle className="text-xl font-semibold text-white">
-            Talk to Sales
-          </DialogTitle>
-          <DialogDescription className="text-xs text-neutral-400">
-            Tell us about your business and expected call volume.
-          </DialogDescription>
-        </DialogHeader>
-
-        <TalkToSalesForm />
+      <DialogContent
+        className="w-[calc(100%-32px)] max-w-[460px] p-6 sm:p-8 bg-[rgba(10,10,11,0.94)] backdrop-blur-2xl border border-[var(--border-2)] rounded-[20px] shadow-[var(--shadow-glass)] max-h-[92vh] overflow-y-auto ring-0"
+        showClose={true}
+      >
+        <TalkToSalesForm onSuccess={() => setIsOpen(false)} showLogo={true} />
       </DialogContent>
     </Dialog>
   );
