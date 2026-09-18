@@ -10,6 +10,16 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
 import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
+import { NativeSelect } from '@/components/ui/native-select';
+import {
   Phone, PhoneIncoming, PhoneOutgoing, PhoneMissed, Clock, Trash2,
 } from 'lucide-react';
 import { getCalls, getAgents, deleteCallApi } from '@/lib/api';
@@ -19,6 +29,19 @@ import DialSheet from '@/components/dashboard/DialSheet';
 import { cn } from '@/lib/utils';
 
 type Filter = 'all' | 'inbound' | 'outbound' | 'live';
+
+function getPageNumbers(current: number, total: number): (number | 'ellipsis')[] {
+  if (total <= 5) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+  if (current <= 3) {
+    return [1, 2, 3, 4, 'ellipsis', total];
+  }
+  if (current >= total - 2) {
+    return [1, 'ellipsis', total - 3, total - 2, total - 1, total];
+  }
+  return [1, 'ellipsis', current - 1, current, current + 1, 'ellipsis', total];
+}
 
 function formatDuration(secs: number | null): string {
   if (!secs) return '—';
@@ -58,6 +81,8 @@ export default function CallsPage() {
   const [filter, setFilter] = useState<Filter>('all');
   const [dialOpen, setDialOpen] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     let mounted = true;
@@ -80,6 +105,11 @@ export default function CallsPage() {
     if (filter === 'live') return c.status === 'in_progress';
     return true;
   });
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const safePage = Math.min(currentPage, totalPages);
+  const startIndex = (safePage - 1) * pageSize;
+  const paginatedCalls = filtered.slice(startIndex, startIndex + pageSize);
 
   const liveCount = calls.filter(c => c.status === 'in_progress').length;
   const inbound = calls.filter(c => c.direction === 'inbound').length;
@@ -149,7 +179,10 @@ export default function CallsPage() {
                 return (
                   <button
                     key={f.key}
-                    onClick={() => setFilter(f.key)}
+                    onClick={() => {
+                      setFilter(f.key);
+                      setCurrentPage(1);
+                    }}
                     className={cn(
                       'px-3 py-1 rounded-full font-mono text-[10px] transition-colors',
                       filter === f.key
@@ -178,7 +211,8 @@ export default function CallsPage() {
               <p className="text-sm">No calls found.</p>
             </div>
           ) : (
-            <Table>
+            <>
+              <Table>
               <TableHeader>
                 <TableRow className="border-border hover:bg-transparent">
                   <TableHead className="w-8 pl-4" />
@@ -201,7 +235,7 @@ export default function CallsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filtered.map(call => {
+                {paginatedCalls.map(call => {
                   const status = statusMeta(call.status);
                   const number = call.direction === 'inbound' ? call.from_number : call.to_number;
                   return (
@@ -275,6 +309,65 @@ export default function CallsPage() {
                 })}
               </TableBody>
             </Table>
+            {filtered.length > 0 && (
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-border px-4 py-3">
+                <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                  <span>
+                    Showing <span className="font-medium text-foreground">{startIndex + 1}</span>–<span className="font-medium text-foreground">{Math.min(startIndex + pageSize, filtered.length)}</span> of{' '}
+                    <span className="font-medium text-foreground">{filtered.length}</span> calls
+                  </span>
+                  <div className="flex items-center gap-1.5 ml-2">
+                    <span className="text-[11px]">Rows:</span>
+                    <NativeSelect
+                      value={pageSize}
+                      onChange={(e) => {
+                        setPageSize(Number(e.target.value));
+                        setCurrentPage(1);
+                      }}
+                      className="h-7 w-16 text-xs px-2 py-0"
+                    >
+                      <option value={10}>10</option>
+                      <option value={25}>25</option>
+                      <option value={50}>50</option>
+                    </NativeSelect>
+                  </div>
+                </div>
+
+                {totalPages > 1 && (
+                  <Pagination className="mx-0 w-auto justify-end">
+                    <PaginationContent>
+                      <PaginationItem>
+                        <PaginationPrevious
+                          disabled={safePage <= 1}
+                          onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                        />
+                      </PaginationItem>
+                      {getPageNumbers(safePage, totalPages).map((p, idx) => (
+                        <PaginationItem key={idx}>
+                          {p === 'ellipsis' ? (
+                            <PaginationEllipsis />
+                          ) : (
+                            <PaginationLink
+                              isActive={safePage === p}
+                              onClick={() => setCurrentPage(Number(p))}
+                            >
+                              {p}
+                            </PaginationLink>
+                          )}
+                        </PaginationItem>
+                      ))}
+                      <PaginationItem>
+                        <PaginationNext
+                          disabled={safePage >= totalPages}
+                          onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                        />
+                      </PaginationItem>
+                    </PaginationContent>
+                  </Pagination>
+                )}
+              </div>
+            )}
+            </>
           )}
         </CardContent>
       </Card>
