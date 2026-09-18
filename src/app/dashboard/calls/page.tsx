@@ -18,7 +18,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import { NativeSelect } from '@/components/ui/native-select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   Phone, PhoneIncoming, PhoneOutgoing, PhoneMissed, Clock, Trash2,
 } from 'lucide-react';
@@ -318,18 +324,24 @@ export default function CallsPage() {
                   </span>
                   <div className="flex items-center gap-1.5 ml-2">
                     <span className="text-[11px]">Rows:</span>
-                    <NativeSelect
-                      value={pageSize}
-                      onChange={(e) => {
-                        setPageSize(Number(e.target.value));
-                        setCurrentPage(1);
+                    <Select
+                      value={String(pageSize)}
+                      onValueChange={(v) => {
+                        if (v) {
+                          setPageSize(Number(v));
+                          setCurrentPage(1);
+                        }
                       }}
-                      className="h-7 w-16 text-xs px-2 py-0"
                     >
-                      <option value={10}>10</option>
-                      <option value={25}>25</option>
-                      <option value={50}>50</option>
-                    </NativeSelect>
+                      <SelectTrigger size="sm" className="h-7 w-[68px] text-xs font-mono">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent side="top" align="start">
+                        <SelectItem value="10">10</SelectItem>
+                        <SelectItem value="25">25</SelectItem>
+                        <SelectItem value="50">50</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 
