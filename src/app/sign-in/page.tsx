@@ -39,6 +39,22 @@ export default function SignInPage() {
     }
   }
 
+  async function handleGoogleSignIn() {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+      if (error) {
+        toast.error(error.message);
+      }
+    } catch (err: any) {
+      toast.error(err?.message || 'Failed to initiate Google sign in');
+    }
+  }
+
   return (
     <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
       {/* Grid background */}
@@ -114,6 +130,7 @@ export default function SignInPage() {
           {/* Google button */}
           <button
             type="button"
+            onClick={handleGoogleSignIn}
             style={{
               width: '100%',
               display: 'flex',

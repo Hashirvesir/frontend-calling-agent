@@ -7,6 +7,7 @@ import { Logo } from '@/components/Icons';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { signup } from '@/lib/api';
+import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
 
 function GoogleIcon() {
@@ -39,6 +40,22 @@ export default function SignUpPage() {
     }
     toast.success('Check your email for a verification code.');
     router.push(`/verify-email?email=${encodeURIComponent(trimmed)}`);
+  }
+
+  async function handleGoogleSignIn() {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+      if (error) {
+        toast.error(error.message);
+      }
+    } catch (err: any) {
+      toast.error(err?.message || 'Failed to initiate Google sign up');
+    }
   }
 
   return (
@@ -115,6 +132,7 @@ export default function SignUpPage() {
           {/* Google button */}
           <button
             type="button"
+            onClick={handleGoogleSignIn}
             style={{
               width: '100%',
               display: 'flex',
