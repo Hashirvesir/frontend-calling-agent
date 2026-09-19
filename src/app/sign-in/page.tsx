@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Logo } from '@/components/Icons';
@@ -25,6 +25,15 @@ export default function SignInPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const err = params.get('error');
+    if (err) {
+      toast.error(decodeURIComponent(err));
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
