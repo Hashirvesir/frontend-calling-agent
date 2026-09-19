@@ -36,10 +36,14 @@ export default function AuthCallbackPage() {
       // 2. PKCE flow — exchange the code for a session.
       const code = queryParams.get('code');
       if (code) {
-        const { error: exchangeError } =
+        const { data, error: exchangeError } =
           await supabase.auth.exchangeCodeForSession(code);
         if (exchangeError) {
           if (!cancelled) setError(exchangeError.message);
+          return;
+        }
+        if (data?.session) {
+          if (!cancelled) router.replace('/dashboard');
           return;
         }
       }

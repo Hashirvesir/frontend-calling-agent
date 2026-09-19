@@ -12,9 +12,9 @@ export const supabase = createBrowserClient(
       persistSession: true,
       autoRefreshToken: true,
       // Parse the session out of the URL after email-confirmation / OAuth
-      // redirects (tokens arrive in the hash fragment with the implicit flow).
+      // redirects (tokens arrive with PKCE code exchange or hash fragment).
       detectSessionInUrl: true,
-      flowType: 'implicit',
+      flowType: 'pkce',
     },
   }
 )
