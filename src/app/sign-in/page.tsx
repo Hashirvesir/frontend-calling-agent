@@ -27,13 +27,18 @@ export default function SignInPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    // If already logged in, send to dashboard
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) router.replace('/dashboard');
+    });
+
     const params = new URLSearchParams(window.location.search);
     const err = params.get('error');
     if (err) {
       toast.error(decodeURIComponent(err));
       window.history.replaceState({}, '', window.location.pathname);
     }
-  }, []);
+  }, [router]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -44,7 +49,7 @@ export default function SignInPage() {
     if (error) {
       toast.error(error.message);
     } else {
-      router.push('/dashboard');
+      router.push('/auth/success');
     }
   }
 
