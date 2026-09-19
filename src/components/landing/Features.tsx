@@ -110,7 +110,7 @@ export default function Features() {
           textTransform: 'uppercase',
           marginBottom: '16px',
         }}>
-          PLATFORM
+          FEATURES
         </div>
         <h2 style={{
           fontSize: 'clamp(28px, 4vw, 44px)',
