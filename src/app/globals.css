@@ -117,6 +117,10 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 html, body {
   background: var(--canvas);
   color: var(--fg-1);

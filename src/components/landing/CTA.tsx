@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { ArrowRight } from '../Icons';
-import TalkToSalesDialog from './TalkToSalesDialog';
 
 export default function CTA() {
   return (
@@ -48,11 +47,9 @@ export default function CTA() {
           <Link href="/sign-up" className="btn btn-primary btn-lg">
             Start free trial <ArrowRight size={16} />
           </Link>
-          <TalkToSalesDialog>
-            <button className="btn btn-secondary btn-lg" style={{ cursor: 'pointer' }}>
-              Book a demo
-            </button>
-          </TalkToSalesDialog>
+          <a href="#talk-to-sales" className="btn btn-secondary btn-lg">
+            Book a demo
+          </a>
         </div>
       </div>
     </section>

@@ -194,7 +194,7 @@ export default function VoiceDemo() {
   const currentPlaceholder = COUNTRY_CODES.find(c => c.code === countryCode)?.placeholder ?? '300 1234567';
 
   return (
-    <section style={{ padding: '80px 24px', maxWidth: '1200px', margin: '0 auto' }}>
+    <section id="platform" style={{ padding: '80px 24px', maxWidth: '1200px', margin: '0 auto', scrollMarginTop: '80px' }}>
 
       {/* ── Header ── */}
       <div style={{ marginBottom: '48px', textAlign: 'center' }}>

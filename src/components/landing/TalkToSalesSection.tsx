@@ -10,6 +10,7 @@ export default function TalkToSalesSection() {
         padding: '80px 24px',
         maxWidth: '760px',
         margin: '0 auto',
+        scrollMarginTop: '80px',
       }}
     >
       <div

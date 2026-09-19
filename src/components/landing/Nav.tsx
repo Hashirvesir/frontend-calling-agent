@@ -3,8 +3,6 @@
 import Link from 'next/link';
 import { Logo, ArrowRight } from '../Icons';
 
-import TalkToSalesDialog from './TalkToSalesDialog';
-
 export default function Nav() {
   return (
     <header className="landing-header" style={{
@@ -38,9 +36,10 @@ export default function Nav() {
         {/* Nav Links */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }} className="nav-links">
           {[
-            { label: 'Platform', href: '#' },
-            { label: 'Features', href: '#' },
-            { label: 'Pricing', href: '#' },
+            { label: 'Platform', href: '#platform' },
+            { label: 'Features', href: '#features' },
+            { label: 'Pricing', href: '#pricing' },
+            { label: 'Talk to Sales', href: '#talk-to-sales' },
           ].map(link => (
             <a
               key={link.label}
@@ -48,38 +47,18 @@ export default function Nav() {
               style={{
                 padding: '6px 12px',
                 fontSize: '14px',
-                color: 'var(--fg-2)',
+                color: link.label === 'Talk to Sales' ? 'var(--chart-1)' : 'var(--fg-2)',
                 textDecoration: 'none',
                 borderRadius: '8px',
                 transition: 'color 150ms',
-                fontWeight: 400,
+                fontWeight: link.label === 'Talk to Sales' ? 500 : 400,
               }}
               onMouseEnter={e => (e.currentTarget.style.color = 'var(--fg-0)')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'var(--fg-2)')}
+              onMouseLeave={e => (e.currentTarget.style.color = link.label === 'Talk to Sales' ? 'var(--chart-1)' : 'var(--fg-2)')}
             >
               {link.label}
             </a>
           ))}
-          <TalkToSalesDialog>
-            <button
-              type="button"
-              style={{
-                padding: '6px 12px',
-                fontSize: '14px',
-                color: 'var(--chart-1)',
-                borderRadius: '8px',
-                transition: 'color 150ms',
-                fontWeight: 500,
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-              }}
-              onMouseEnter={e => (e.currentTarget.style.color = 'var(--fg-0)')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'var(--chart-1)')}
-            >
-              Talk to Sales
-            </button>
-          </TalkToSalesDialog>
         </div>
 
         {/* CTA */}

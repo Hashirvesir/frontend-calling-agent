@@ -94,10 +94,11 @@ function FeatureCard({ icon, title, desc, large, code }: {
 
 export default function Features() {
   return (
-    <section style={{
+    <section id="features" style={{
       padding: '80px 24px',
       maxWidth: '1200px',
       margin: '0 auto',
+      scrollMarginTop: '80px',
     }}>
       {/* Header */}
       <div style={{ marginBottom: '48px', textAlign: 'center' }}>
