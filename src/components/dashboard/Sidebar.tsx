@@ -40,9 +40,7 @@ export default function AppSidebar() {
         <div className="flex items-center gap-3">
           {/* Logo */}
           <div className="relative flex size-8 shrink-0 items-center justify-center rounded-lg">
-            <div className="absolute inset-0 rounded-lg bg-chart-1/15 ring-1 ring-chart-1/40" />
-            <div className="absolute inset-0 rounded-lg bg-chart-1/8 blur-sm" />
-            <Logo size={18} className="relative text-chart-1" />
+            <Logo size={18} className="relative text-white" />
           </div>
 
           {/* Name — hidden when collapsed */}
