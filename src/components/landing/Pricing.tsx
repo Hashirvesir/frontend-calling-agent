@@ -23,7 +23,7 @@ const plans = [
     name: 'Business',
     price: '$399',
     period: '/mo',
-    desc: 'Includes 3,000 minutes. Extra minutes billed at $0.12/min.',
+    desc: 'Includes 3,000 minutes. Extra minutes billed at $0.13/min.',
     cta: 'Start free trial',
     ctaClass: 'btn btn-primary btn-lg',
     href: '/sign-up',
@@ -31,7 +31,7 @@ const plans = [
     badge: 'Most popular',
     features: [
       '3,000 included minutes / month',
-      '$0.12/min extra minute rate',
+      '$0.13/min extra minute rate',
       'Speech-to-speech (STS) models',
       'Mid-call multilingual switching',
       'Calendar · CRM · Webhook tools',
@@ -49,7 +49,7 @@ const plans = [
     featured: false,
     features: [
       '10,000+ included minutes',
-      '$0.10/min extra minute rate',
+      '$0.12/min extra minute rate',
       'Dedicated private server capacity',
       'SOC 2 · HIPAA · Custom SLA',
       'Dedicated account manager & 24/7 support',
