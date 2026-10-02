@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import Nav from '@/components/landing/Nav';
 import Hero from '@/components/landing/Hero';
 import VoiceDemo from '@/components/landing/VoiceDemo';
@@ -13,21 +12,6 @@ import CTA from '@/components/landing/CTA';
 import Footer from '@/components/landing/Footer';
 
 export default function Home() {
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in');
-          }
-        });
-      },
-      { threshold: 0.08 }
-    );
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <div style={{ position: 'relative', overflow: 'hidden' }}>
       {/* Background grid */}
@@ -66,14 +50,14 @@ export default function Home() {
 
       <div style={{ position: 'relative', zIndex: 1 }}>
         <Nav />
-        <div className="reveal"><Hero /></div>
-        <div className="reveal"><VoiceDemo /></div>
-        <div className="reveal"><Features /></div>
-        <div className="reveal"><DashboardPreview /></div>
-        <div className="reveal"><Pricing /></div>
-        <div className="reveal"><TalkToSalesSection /></div>
-        <div className="reveal"><Testimonials /></div>
-        <div className="reveal"><CTA /></div>
+        <Hero />
+        <VoiceDemo />
+        <Features />
+        <DashboardPreview />
+        <Pricing />
+        <TalkToSalesSection />
+        <Testimonials />
+        <CTA />
         <Footer />
       </div>
     </div>
